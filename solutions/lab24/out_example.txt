@@ -1,0 +1,147 @@
+./app.exe -i
+Input your expression: 66+5*x+y^(u*4*3+2*x*y-2/(2*x*y^2))-567*3/~4+~4*x
+
+Source expression divided into lexemes:
+Lexeme<NUMBER>("66")
+Lexeme<OPERATOR>("+")
+Lexeme<NUMBER>("5")
+Lexeme<OPERATOR>("*")
+Lexeme<VARIABLE>("x")
+Lexeme<OPERATOR>("+")
+Lexeme<VARIABLE>("y")
+Lexeme<OPERATOR>("^")
+Lexeme<BRACKET_OPEN>("(")
+Lexeme<VARIABLE>("u")
+Lexeme<OPERATOR>("*")
+Lexeme<NUMBER>("4")
+Lexeme<OPERATOR>("*")
+Lexeme<NUMBER>("3")
+Lexeme<OPERATOR>("+")
+Lexeme<NUMBER>("2")
+Lexeme<OPERATOR>("*")
+Lexeme<VARIABLE>("x")
+Lexeme<OPERATOR>("*")
+Lexeme<VARIABLE>("y")
+Lexeme<OPERATOR>("-")
+Lexeme<NUMBER>("2")
+Lexeme<OPERATOR>("/")
+Lexeme<BRACKET_OPEN>("(")
+Lexeme<NUMBER>("2")
+Lexeme<OPERATOR>("*")
+Lexeme<VARIABLE>("x")
+Lexeme<OPERATOR>("*")
+Lexeme<VARIABLE>("y")
+Lexeme<OPERATOR>("^")
+Lexeme<NUMBER>("2")
+Lexeme<BRACKET_CLOSE>(")")
+Lexeme<BRACKET_CLOSE>(")")
+Lexeme<OPERATOR>("-")
+Lexeme<NUMBER>("567")
+Lexeme<OPERATOR>("*")
+Lexeme<NUMBER>("3")
+Lexeme<OPERATOR>("/")
+Lexeme<OPERATOR>("~")
+Lexeme<NUMBER>("4")
+Lexeme<OPERATOR>("+")
+Lexeme<OPERATOR>("~")
+Lexeme<NUMBER>("4")
+Lexeme<OPERATOR>("*")
+Lexeme<VARIABLE>("x")
+
+Expression in postfix form: 66 5 x * + y u 4 * 3 * 2 x * y * + 2 2 x * y 2 ^ * / - ^ + 567 3 * 4 ~ / - 4 ~ x * +
+
+Source expression's tree:
++
+ -
+  +
+   +
+    66
+    *
+     5
+     x
+   ^
+    y
+    -
+     +
+      *
+       *
+        u
+        4
+       3
+      *
+       *
+        2
+        x
+       y
+     /
+      2
+      *
+       *
+        2
+        x
+       ^
+        y
+        2
+  /
+   *
+    567
+    3
+   ~
+    4
+ *
+  ~
+   4
+  x
+
+Processed expression's tree:
++
+ -
+  +
+   +
+    66
+    +
+     x
+     +
+      x
+      +
+       x
+       +
+        x
+        x
+   ^
+    y
+    -
+     +
+      *
+       4
+       +
+        u
+        +
+         u
+         u
+      *
+       x
+       +
+        y
+        y
+     /
+      2
+      *
+       ^
+        y
+        2
+       +
+        x
+        x
+  /
+   *
+    567
+    3
+   ~
+    4
+ *
+  ~
+   4
+  x
+
+Processed expression: 66+x+x+x+x+x+y^(4*(u+u+u)+x*(y+y)-2/y^2*(x+x))-567*3/~4+~4*x
