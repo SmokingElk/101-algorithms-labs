@@ -1,0 +1,41 @@
+#!/bin/sh
+
+extDel=""
+if [ -n "$1" ]
+then
+	extDel=$1
+else
+	echo "Input an extension, files with witch you want to delete: "
+	read extDel
+fi
+
+extMustBe=""
+if [ -n "$2" ]
+then
+	extMustBe=$2
+else
+	echo "Input an extension, which file with same name must have: "
+	read extMustBe
+fi
+
+# check if files with given extension exist
+ls *$extDel 2> /dev/null 1> /dev/null 
+if [ $? -ne 0 ]
+then
+	echo "No files with extension $extDel"
+	exit 1	
+fi
+
+files=$(find *$extDel)
+
+for i in $files
+do
+	name=$(basename $i)
+	cleanName=${name%.*}
+	search="$cleanName$extMustBe"
+	
+	if [ -e $search ]
+	then
+		rm $name
+	fi
+done
