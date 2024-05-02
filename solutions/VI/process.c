@@ -3,16 +3,18 @@
 #include <stdbool.h>
 #include "database.h"
 
-void usageHint () { printf("Usage: program filename."); }
-void errorMsg () { printf("Database connection error."); }
+void usageHint () { printf("Usage: program filename mode [param]."); }
+void connectionErrorMsg () { printf("Database connection error."); }
+void modeErrorMsg (char mode[]) { printf("Unexpected process mode: %s\n", mode); }
 
-bool isSetFull (DBReader *reader) {
-    return columnHasPC(reader) && columnHasMouse(reader) && columnHasCharger(reader);
+bool isSetFull (DBReader *reader, int missingForNotFull) {
+    int partsIncluded = columnHasPC(reader) + columnHasMouse(reader) + columnHasCharger(reader);
+    return PARTS_COUNT - partsIncluded < missingForNotFull;
 }
 
-void printAnnotation (DBReader *reader) {
+void printAnnotation (DBReader *reader, int missingForNotFull) {
     printf("Set with id %d is ", columnId(reader));
-    if (isSetFull(reader)) {
+    if (isSetFull(reader, missingForNotFull)) {
         printf("full.\n");
         return;
     }
@@ -36,7 +38,7 @@ void printAnnotation (DBReader *reader) {
 }
 
 int main (int argc, char *argv[]) {  
-    if (argc != 2) {
+    if (argc < 3) {
         usageHint();
         return 1;
     }
@@ -46,14 +48,29 @@ int main (int argc, char *argv[]) {
     DBReader *reader = connectDBRead(argv[1], &connectionRes);
 
     if (connectionRes != CONNECTION_SUCCESS) {
-        errorMsg();
+        connectionErrorMsg();
         return 2;
     } 
 
-    while (readNextLine(reader) == READING_CONTINUE) {
-        if (isSetFull(reader)) continue;
+    if (strcmp(argv[2], "-f") == 0) {
+        while (readNextLine(reader) == READING_CONTINUE) {
+            printf("%d\t%d\t%d\t%d\n", columnId(reader), columnHasPC(reader), columnHasMouse(reader), columnHasCharger(reader));
+        }
 
-        printAnnotation(reader);
+        return 0;
+    }
+
+    if (strcmp(argv[2], "-p") != 0) {
+        modeErrorMsg(argv[2]);
+        return 1;
+    }
+
+    int missingForNotFull = atoi(argv[3]);
+
+    while (readNextLine(reader) == READING_CONTINUE) {
+        if (isSetFull(reader, missingForNotFull)) continue;
+
+        printAnnotation(reader, missingForNotFull);
         notFullSetsCount++;
     }
 

@@ -2,13 +2,13 @@ dbFilename=./db
 
 all: database dumpC processC clear
 	./dump.exe $(dbFilename)
-	./process.exe $(dbFilename)
+	./process.exe $(dbFilename) -f
 
 dump: database dumpC clear
 	./dump.exe $(dbFilename)
 
 process: database processC clear
-	./process.exe $(dbFilename)
+	./process.exe $(dbFilename) -f
 
 dumpC: 
 	gcc -c ./dump.c -o ./dump.o
