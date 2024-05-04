@@ -79,7 +79,6 @@ void Solution(const char* expression, int len){
             if (expression[i + 1] == '0'){
                 continue;
             }
-            std::cout << expression[i];
         }
         else if (expression[i] != '0'){
             std::cout << expression[i];
