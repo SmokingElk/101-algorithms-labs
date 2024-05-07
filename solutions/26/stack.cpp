@@ -12,6 +12,11 @@ struct Stack
         data[++top] = key;
     }
 
+    Stack() : length(10)
+    {
+        data = new int[10];
+    }
+
     void deleteStack();
     bool isEmptyStack();
     void pushStack(int el);
@@ -86,40 +91,37 @@ int Stack::popStack()
     return data[top--];
 }
 
+Stack Concatanate(Stack* a, Stack* b)
+{
+    Stack c;
+    while (!a->isEmptyStack())
+    {
+        c.pushStack(a->popStack());
+    }
+    while (!b->isEmptyStack())
+    {
+        c.pushStack(b->popStack());
+    }
+    
+    return c;
+}
+
 int main()
 {
-    Stack s1 = Stack(1);
-    Stack s2 = Stack(1);
-    Stack s3 = Stack(1);
-
-    s1.deleteStack();
-    s2.deleteStack();
-    s3.deleteStack();
-
+    Stack s1;
+    s1.pushStack(1);
+    s1.pushStack(2);
     s1.pushStack(3);
     s1.pushStack(4);
-    s1.pushStack(7);
 
-    s3.copyStack(s1);
-
-    Stack perehod = Stack(1);
-    perehod.deleteStack();
-
-    while (s1.top != -1)
-    {
-        int el = s1.popStack();
-        perehod.pushStack(el);
-    }
-    while (perehod.top != -1)
-    {
-        s2.pushStack(perehod.popStack());
-    }
-    while (s2.top != -1)
-    {
-        std::cout << s2.popStack() << " ";
-    }
-    std::cout << "\n";
-    while (s3.top != -1)
+    Stack s2;
+    s1.pushStack(5);
+    s2.pushStack(6);
+    s2.pushStack(7);
+    s2.pushStack(8);
+    
+    Stack s3 = Concatanate(&s2, &s1);
+    while (!s3.isEmptyStack())
     {
         std::cout << s3.popStack() << " ";
     }
