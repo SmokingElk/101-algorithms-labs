@@ -1,0 +1,20 @@
+Ivanov I.I. 1 4.5 3.7 4.2
+Petrov P.P. 1 4.8 4.1 4.5
+Sidorov S.S. 2 4.2 3.9 4.0
+Kuznetsov K.K. 3 4.3 4.0 3.8
+Vasiliev V.V. 2 4.6 4.2 4.4
+Fedorov F.F. 3 4.1 4.3 4.5
+Smirnov S.M. 1 4.2 4.0 4.1
+Popov P.S. 2 4.5 4.4 4.3
+Mikhailov M.M. 3 4.0 3.8 3.9
+Novikov N.N. 1 4.4 4.1 4.2
+Morozov M.I. 2 4.3 4.2 4.1
+Sokolov S.S. 3 4.2 3.9 4.0
+Orlov O.S. 1 4.1 4.0 4.3
+Zaytsev Z.Z. 2 4.2 4.1 4.2
+Kozlov K.S. 3 4.3 4.4 4.5
+
+answer:
+group: 3
+students: 1
+avg: 3.9
