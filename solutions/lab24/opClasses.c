@@ -21,6 +21,24 @@ int opearationPriority (Lexeme *lexeme) {
     }
 }
 
+commutativity operationCommutativity (Lexeme *lexeme) {
+    if (lexeme->type != OPERATOR) return COMMUTATIVE_NONE;
+
+    char operationSign = lexeme->content[0];
+
+    switch (operationSign) {
+        case '+':
+        case '*':
+            return COMMUTATIVE;
+        case '-':
+        case '/':
+        case '^':
+            return NOT_COMMUTATIVE;
+        default:
+            return BINARY;
+    }
+}
+
 associativity operationAssociativity (Lexeme *lexeme) {
     if (lexeme->type != OPERATOR) return ASSOCIATIVE_NONE;
 

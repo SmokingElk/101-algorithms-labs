@@ -144,4 +144,5 @@ Processed expression's tree:
    4
   x
 
-Processed expression: 66+x+x+x+x+x+y^(4*(u+u+u)+x*(y+y)-2/y^2*(x+x))-567*3/~4+~4*x
+Processed expression: 
+66+x+x+x+x+x+y^(4*(u+u+u)+x*(y+y)-2/(y^2*(x+x)))-567*3/~4+~4*x

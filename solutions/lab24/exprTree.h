@@ -28,6 +28,8 @@ ExprTree right (ExprTree tree);
 bool isTerm (ExprTree tree);
 int extractNumber (ExprTree tree);
 int nodeOperationPriority (ExprTree node);
+commutativity nodeOperationCommutativity (ExprTree node);
+associativity nodeOperationAssociativity (ExprTree node);
 void deleteExprTree (ExprTree tree);
 
 void printExprTree (ExprTree tree, int level);

@@ -84,6 +84,28 @@ int nodeOperationPriority (ExprTree node) {
     return priority;
 }
 
+commutativity nodeOperationCommutativity (ExprTree node) {
+    char *contentCopy = (char*)malloc(sizeof(char) * strlen(node->content + 1));
+    strcpy(contentCopy, node->content);
+
+    Lexeme *lexTmp = newLexeme(node->contentType, contentCopy);
+    commutativity res = operationCommutativity(lexTmp);
+
+    deleteLexeme(lexTmp);
+    return res;
+}
+
+associativity nodeOperationAssociativity (ExprTree node) {
+    char *contentCopy = (char*)malloc(sizeof(char) * strlen(node->content + 1));
+    strcpy(contentCopy, node->content);
+
+    Lexeme *lexTmp = newLexeme(node->contentType, contentCopy);
+    associativity res = operationAssociativity(lexTmp);
+
+    deleteLexeme(lexTmp);
+    return res;
+}
+
 void deleteExprTree (ExprTree tree) {
     if (tree->childLeft != NULL) deleteExprTree(tree->childLeft);
     if (tree->childRight != NULL) deleteExprTree(tree->childRight);
@@ -112,7 +134,15 @@ void printTreeAsExpr (ExprTree tree) {
     printf("%s", tree->content);
 
     if (tree->childRight != NULL) {
-        bool wrapRight = tree->childRight->contentType == OPERATOR && nodeOperationPriority(tree->childRight) < rootPriority;
+        int rightPriority = nodeOperationPriority(tree->childRight);
+
+        bool isRightOperator = tree->childRight->contentType == OPERATOR;
+        bool lowPriority = isRightOperator && rightPriority < rootPriority;
+        bool notCommutative = nodeOperationCommutativity(tree) == NOT_COMMUTATIVE;
+        bool isRootRightAssoc = nodeOperationAssociativity(tree) == ASSOCIATIVE_RIGHT;
+        bool equalPriorityNotCommutative = notCommutative && isRightOperator && rightPriority == rootPriority && !isRootRightAssoc;
+        bool wrapRight = lowPriority || equalPriorityNotCommutative;
+
         if (wrapRight) printf("(");
         printTreeAsExpr(tree->childRight);
         if (wrapRight) printf(")");
