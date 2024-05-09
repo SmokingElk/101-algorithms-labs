@@ -1,0 +1,15 @@
+Ivanova V.I. 1 5 3 4
+Petrova V.P. 1 5 4 3 
+Sidorova S.S. 2 5 5 5
+Kuznetsova K.K. 3 5 5 3
+Vasilieva V.V. 2 3 5 5 
+Fedorova F.F. 3 4 4 4
+Smirnova S.M. 1 3 3 3
+Popova P.S. 2 4 5 4   
+Mikhailova M.M. 3 5 4 3
+Novikova N.N. 1 3 3 4
+Morozova M.I. 2 4 4 5
+Sokolova S.S. 3 3 4 5
+Orlova O.S. 1 5 5 4
+Zaytseva Z.Z. 2 5 4 5
+Kozlova K.S. 3 4 5 4
