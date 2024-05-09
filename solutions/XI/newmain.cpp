@@ -11,7 +11,7 @@ struct Record
     std::string data;
 };
 
-void shakerSort(Record table[], int n)
+void shakerSort2(Record table[], int n)
 {
     int left = 0, right = n - 1, swapped = 1;
     while (left < right && swapped)
@@ -35,6 +35,58 @@ void shakerSort(Record table[], int n)
             }
         }
         left++;
+    }
+}
+
+void shakerSort(Record arr[], int n) {
+    int left = 0;
+    int right = n - 1;
+    int swapped = 1;
+
+    while (left < right && swapped) {
+        swapped = 0;
+
+        int temp = arr[left].key;
+        int swappedIndex = left;
+        
+        // Проход снизу вверх
+        for (int i = left; i <= right; i++) {
+            if (arr[i].key < temp) {
+                temp = arr[i].key;
+                swappedIndex = i;
+                swapped = 1;
+            }
+        }
+        if (swapped)
+        {
+            std::string saveData = arr[swappedIndex].data;
+            arr[swappedIndex].key = arr[left].key;
+            arr[swappedIndex].data = arr[left].data;
+            arr[left].data = saveData;
+            arr[left].key = temp;
+        }
+        left++;
+
+        temp = arr[right].key;
+        swappedIndex = right;
+        
+        // Проход сверху вниз
+        for (int i = right; i >= left; i--) {
+            if (arr[i].key > temp) {
+                temp = arr[i].key;
+                swappedIndex = i;
+                swapped = 1;
+            }
+        }
+        if (swapped)
+        {
+            std::string saveData = arr[swappedIndex].data;
+            arr[swappedIndex].key = arr[right].key;
+            arr[swappedIndex].data = arr[right].data;
+            arr[right].data = saveData;
+            arr[right].key = temp;
+        }
+        right--;
     }
 }
 
