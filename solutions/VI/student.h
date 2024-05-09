@@ -9,7 +9,7 @@ struct Student
     char surname[MAX_SURNAME_LENGTH];
     char initials[MAX_INITIALS_LENGTH];
     char group[MAX_GROUP_LENGTH];
-    int math_grade;
-    int physics_grade;
-    int informatics_grade;
+    float math_grade;
+    float physics_grade;
+    float informatics_grade;
 };

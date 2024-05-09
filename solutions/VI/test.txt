@@ -13,3 +13,4 @@ Sokolova S.S. 3 3 4 5
 Orlova O.S. 1 5 5 4
 Zaytseva Z.Z. 2 5 4 5
 Kozlova K.S. 3 4 5 4
+END
