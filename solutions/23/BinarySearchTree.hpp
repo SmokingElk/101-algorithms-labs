@@ -1,7 +1,7 @@
 #ifndef BINARYSEARCHTREE_H
 #define BINARYSEARCHTREE_H
 
-#include "TreeNode.h"
+#include "TreeNode.hpp"
 #include <iostream>
 #include <climits>
 
