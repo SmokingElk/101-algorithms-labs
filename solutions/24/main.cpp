@@ -20,9 +20,15 @@ bool isOperator(char c) {
 
 TreeNode* buildExpressionTree(const string& postfixExpression) {
     stack<TreeNode*> stack;
+    int minus = 1;
 
     for (char c : postfixExpression) {
         if (isOperator(c)) {
+            if (c == '-')
+            {
+                minus *= -1;
+                continue;
+            }
             TreeNode* rightOperand = stack.top();
             stack.pop();
             TreeNode* leftOperand;
@@ -42,8 +48,15 @@ TreeNode* buildExpressionTree(const string& postfixExpression) {
             stack.push(new TreeNode(c));
         }
     }
+    
+    TreeNode* ret = new TreeNode('\0');
+    if (minus == -1)
+    {
+        ret->value = '-';
+    }
+    ret->right = stack.top();
 
-    return stack.top();
+    return ret;
 }
 
 void printInorder(TreeNode* root) {
@@ -91,25 +104,13 @@ string infixToPostfix(const string& infixExpression) {
     return postfixExpression;
 }
 
-int countAndRemoveMinusSigns(string& str) {
-    int count = 0;
-    size_t pos = 0;
-    while ((pos = str.find('-')) != string::npos) {
-        str.erase(pos, 1);
-        count++;
-    }
-    return count;
-}
 
 int main() {
-    string infixExpression = "a * (-b) * 4 * (-5)";
-    int minuses = (countAndRemoveMinusSigns(infixExpression)) % 2;
+    string infixExpression = "- ((a * (b)) * (4 * (-5)))";
     string postfixExpression = infixToPostfix(infixExpression);
     TreeNode* root = buildExpressionTree(postfixExpression);
 
     cout << "Дерево разбора для выражения " << postfixExpression << ":\n";
-    if (minuses % 2 == 1)
-        cout << "- ";
     printInorder(root);
     cout << "\n\n";
 
