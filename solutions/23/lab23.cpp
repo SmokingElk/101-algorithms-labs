@@ -1,4 +1,96 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
+#pragma region "Stack"
+template <typename T>
+struct Stack
+{
+    int length;
+    T *data;
+    int top;
+
+    Stack(int key) : length(10), top(-1)
+    {
+        data = new T[10];
+        data[++top] = key;
+    }
+
+    Stack() : length(10), top(-1)
+    {
+        data = new T[10];
+    }
+
+    ~Stack()
+    {
+        delete[] data;
+    }
+
+    void deleteStack()
+    {
+        delete[] data;
+        length = 0;
+        top = -1;
+    }
+
+    bool isEmptyStack()
+    {
+        return (top == -1);
+    }
+
+    void pushStack(T el)
+    {
+        if (top == length - 1)
+        {
+            resizeStack();
+        }
+        data[++top] = el;
+    }
+
+    void resizeStack(int l = 10)
+    {
+        T *temp = new T[length + l];
+        for (int i = 0; i < length; ++i)
+        {
+            temp[i] = data[i];
+        }
+        delete[] data;
+        data = temp;
+        length += l;
+    }
+
+    void copyStack(Stack<T> &ns)
+    {
+        if (length < ns.length)
+        {
+            resizeStack(ns.length - length);
+        }
+        for (int i = 0; i <= ns.top; ++i)
+        {
+            data[i] = ns.data[i];
+        }
+        top = ns.top;
+    }
+
+    T topStack()
+    {
+        if (isEmptyStack())
+        {
+            throw -2;
+        }
+        return data[top];
+    }
+
+    T popStack()
+    {
+        if (isEmptyStack())
+        {
+            throw -3;
+        }
+        return data[top--];
+    }
+};
+
+#pragma endregion
+
 struct Node
 {
     int key;
@@ -22,7 +114,7 @@ struct Node
     Node *find(int key);
     Node *findPrev(int key);
     void erase(int key);
-    std::stack<Node *> getMin();
+    Stack<Node *> getMin();
     void swap(Node *other);
 };
 
@@ -119,19 +211,19 @@ void Node::erase(int key)
     }
     else if (thisKey->right || thisKey->left)
     {
-        std::stack<Node *> st = thisKey->getMin();
-        Node *min = st.top();
-        st.pop();
+        Stack<Node *> st = thisKey->getMin();
+        Node *min = st.topStack();
+        st.popStack();
         int minKey = min->key;
         thisKey->erase(minKey);
         thisKey->key = minKey;
 
-        while (!st.empty())
+        while (!st.isEmptyStack())
         {
-            Node *pp = st.top();
+            Node *pp = st.topStack();
             pp->updateHeight();
             pp->balance();
-            st.pop();
+            st.popStack();
         }
     }
     if (this)
@@ -148,19 +240,19 @@ void Node::swap(Node *other)
     other->key = key;
 }
 
-std::stack<Node *> Node::getMin()
+Stack<Node *> Node::getMin()
 {
     Node *x = this;
-    std::stack<Node *> st;
-    st.push(x);
+    Stack<Node *> st;
+    st.pushStack(x);
     x = this->right ? this->right : this;
     if (x != this)
-        st.push(x);
+        st.pushStack(x);
 
     while (x->left)
     {
         x = x->left;
-        st.push(x);
+        st.pushStack(x);
     }
 
     return st;
@@ -286,47 +378,55 @@ void Post(Node *tree)
 #pragma endregion
 
 #pragma region Laba
-int TreeWidth(Node *tree, int deph = 0)
+void UtilsTreeWidth(Node *tree, int *arr, int level)
 {
-    static std::map<int, int> a;
-
-    if (a.find(deph) != a.end())
+    if (tree)
     {
-        a[deph] += 1;
+        arr[level] += 1;
+        level += 1;
+
+        UtilsTreeWidth(tree->left, arr, level);
+        UtilsTreeWidth(tree->right, arr, level);
     }
-    else
-    {
-        a[deph] = 1;
-    }
-
-    deph++;
-
-    if (tree->left)
-        TreeWidth(tree->left, deph);
-    if (tree->right)
-        TreeWidth(tree->right, deph);
-
-    auto max_element = std::max_element(a.begin(), a.end(),
-                                        [](const auto &a, const auto &b)
-                                        {
-                                            return a.second < b.second;
-                                        });
-    return max_element->second;
 }
+
+int TreeWidth(Node *tree)
+{
+    if (!tree)
+    {
+        return 0;
+    }
+    int* arr = new int[100] {0}; // Предполагаем, что высота не больше 100
+    UtilsTreeWidth(tree, arr, 0);
+
+    int val = 0;
+    int ret = 0;
+    for (int i = 0; i < 100; i++)
+    {
+        if (arr[i] > val)
+        {
+            val = arr[i];
+            ret = i;
+        }
+    }
+    return val;
+}
+
 #pragma endregion
 
 int main()
 {
-    // Node tree(20);
-    // tree.insert(50);
-    // tree.insert(40);
-    // tree.insert(30);
-    // tree.insert(80);
-    // tree.insert(70);
-    // tree.insert(75);
-    // tree.insert(76);
-    // Pref(&tree);
-    // std::cout << "\n";
+    Node tree(20);
+    tree.insert(50);
+    tree.insert(40);
+    tree.insert(30);
+    tree.insert(80);
+    tree.insert(70);
+    tree.insert(75);
+    tree.insert(76);
+    std::cout << "Дерево в префиксной форме: ";
+    Pref(&tree);
+    std::cout << "\n";
 
     // tree.erase(40);
     // tree.erase(50);
@@ -338,6 +438,6 @@ int main()
     // tree.erase(76);
     // tree.insert(90);
     // Pref(&tree);
-    Node tree(100);
+    std::cout << "Максимальная ширина: ";
     std::cout << TreeWidth(&tree);
 }

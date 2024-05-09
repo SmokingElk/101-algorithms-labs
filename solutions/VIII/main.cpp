@@ -1,11 +1,10 @@
 #include <iostream>
-#include <string>
 
 using namespace std;
 
 struct Node
 {
-    string data;
+    char* data;
     Node *next;
     Node *prev;
 };
@@ -35,7 +34,7 @@ public:
         cout << endl;
     }
 
-    void insert(string value)
+    void insert(char* value)
     {
         Node *newNode = new Node();
         newNode->data = value;
@@ -56,7 +55,7 @@ public:
         size++;
     }
 
-    void remove(string value)
+    void remove(char* value)
     {
         if (head == nullptr)
         {

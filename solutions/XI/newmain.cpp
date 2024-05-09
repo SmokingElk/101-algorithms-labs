@@ -1,6 +1,4 @@
 #include <iostream>
-#include <algorithm>
-#include <string>
 
 #define MAX_SIZE 100
 
@@ -8,7 +6,7 @@
 struct Record
 {
     int key;
-    std::string data;
+    char* data;
 };
 
 void shakerSort2(Record table[], int n)
@@ -59,7 +57,7 @@ void shakerSort(Record arr[], int n) {
         }
         if (swapped)
         {
-            std::string saveData = arr[swappedIndex].data;
+            char* saveData = arr[swappedIndex].data;
             arr[swappedIndex].key = arr[left].key;
             arr[swappedIndex].data = arr[left].data;
             arr[left].data = saveData;
@@ -80,7 +78,7 @@ void shakerSort(Record arr[], int n) {
         }
         if (swapped)
         {
-            std::string saveData = arr[swappedIndex].data;
+            char* saveData = arr[swappedIndex].data;
             arr[swappedIndex].key = arr[right].key;
             arr[swappedIndex].data = arr[right].data;
             arr[right].data = saveData;
@@ -149,30 +147,28 @@ int main()
         std::cout << "Ключ: ";
         std::cin >> table[i].key;
         std::cout << "Запись: ";
-        std::cin.ignore(); // Очищаем буфер ввода
-        std::getline(std::cin, table[i].data);
+        std::cin.ignore();
+        char* record = new char[100];
+        std::cin.getline(record, 100);
+        table[i].data = record;
     }
 
     std::cout << std::endl;
     printTable(table, n);
 
-    // Проверка наличия повторяющихся ключей
     if (checkDuplicateKeys(table, n))
     {
         std::cout << "Ошибка: таблица содержит повторяющиеся ключи.\n";
         return 1;
     }
 
-    // Таблица до сортировки
     std::cout << "До сортировки:\n";
     printTable(table, n);
 
-    // Сортировка таблицы
     shakerSort(table, n);
     std::cout << "После сортировки:\n";
     printTable(table, n);
 
-    // Двоичный поиск
     int key;
     std::cout << "Введите ключ для поиска: ";
     while (std::cin >> key && key != -1)

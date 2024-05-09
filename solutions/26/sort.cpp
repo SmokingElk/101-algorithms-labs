@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 #include <ctime>
 
@@ -104,7 +103,7 @@ void swap(int& a, int& b) {
     b = temp;
 }
 
-void quickSort(vector<int>& arr, int left, int right) {
+void quickSort(int arr[], int left, int right) {
     Stack stack;
     stack.pushStack(right);
     stack.pushStack(left);
@@ -139,7 +138,7 @@ int main() {
     srand(time(NULL));
 
     int size = 10;
-    vector<int> arr(size);
+    int arr[size];
 
     for (int i = 0; i < size; i++) {
         arr[i] = rand() % 100;
@@ -151,7 +150,7 @@ int main() {
     }
     cout << endl;
 
-    quickSort(arr, 0, arr.size() - 1);
+    quickSort(arr, 0, 10 - 1);
 
     cout << "Отсортированный массив:\n";
     for (int num : arr) {

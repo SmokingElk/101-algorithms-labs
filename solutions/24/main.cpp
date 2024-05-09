@@ -1,118 +1,231 @@
 #include <iostream>
-#include <stack>
-#include <vector>
-#include <string>
-#include <cctype> // Для функции isdigit
+#include <cstring>
 
 using namespace std;
 
-struct TreeNode {
+#pragma region "Stack"
+template <typename T>
+struct Stack
+{
+    int length;
+    T *data;
+    int top;
+
+    Stack(int key) : length(10), top(-1)
+    {
+        data = new T[10];
+        data[++top] = key;
+    }
+
+    Stack() : length(10), top(-1)
+    {
+        data = new T[10];
+    }
+
+    ~Stack()
+    {
+        delete[] data;
+    }
+
+    void deleteStack()
+    {
+        delete[] data;
+        length = 0;
+        top = -1;
+    }
+
+    bool isEmptyStack()
+    {
+        return (top == -1);
+    }
+
+    void pushStack(T el)
+    {
+        if (top == length - 1)
+        {
+            resizeStack();
+        }
+        data[++top] = el;
+    }
+
+    void resizeStack(int l = 10)
+    {
+        T *temp = new T[length + l];
+        for (int i = 0; i < length; ++i)
+        {
+            temp[i] = data[i];
+        }
+        delete[] data;
+        data = temp;
+        length += l;
+    }
+
+    void copyStack(Stack<T> &ns)
+    {
+        if (length < ns.length)
+        {
+            resizeStack(ns.length - length);
+        }
+        for (int i = 0; i <= ns.top; ++i)
+        {
+            data[i] = ns.data[i];
+        }
+        top = ns.top;
+    }
+
+    T topStack()
+    {
+        if (isEmptyStack())
+        {
+            throw -2;
+        }
+        return data[top];
+    }
+
+    T popStack()
+    {
+        if (isEmptyStack())
+        {
+            throw -3;
+        }
+        return data[top--];
+    }
+};
+
+#pragma endregion
+
+struct TreeNode
+{
     char value;
-    TreeNode* left;
-    TreeNode* right;
+    TreeNode *left;
+    TreeNode *right;
 
     TreeNode(char val) : value(val), left(nullptr), right(nullptr) {}
 };
 
-bool isOperator(char c) {
+bool isOperator(char c)
+{
     return (c == '+' || c == '-' || c == '*' || c == '/');
 }
 
-TreeNode* buildExpressionTree(const string& postfixExpression) {
-    stack<TreeNode*> stack;
+TreeNode *buildExpressionTree(const char *postfixExpression)
+{
+    Stack<TreeNode*> stack;
     int minus = 1;
 
-    for (char c : postfixExpression) {
-        if (isOperator(c)) {
-            if (c == '-')
+    int len = strlen(postfixExpression);
+
+    for (int i = 0; i < len; ++i)
+    {
+        char c = postfixExpression[i];
+        if (isOperator(c))
+        {
+            if (c == '-' && (stack.isEmptyStack() || stack.topStack()->value != ' '))
             {
                 minus *= -1;
                 continue;
             }
-            TreeNode* rightOperand = stack.top();
-            stack.pop();
-            TreeNode* leftOperand;
+            TreeNode *rightOperand = stack.topStack();
+            stack.popStack();
+            TreeNode *leftOperand;
 
-            leftOperand = stack.top();
-            stack.pop();
+            leftOperand = stack.topStack();
+            stack.popStack();
 
-            TreeNode* operatorNode = new TreeNode(c);
+            TreeNode *operatorNode = new TreeNode(c);
 
             operatorNode->left = leftOperand;
 
             operatorNode->right = rightOperand;
 
-            stack.push(operatorNode);
+            stack.pushStack(operatorNode);
         }
-        else {
-            stack.push(new TreeNode(c));
+        else
+        {
+            stack.pushStack(new TreeNode(c));
         }
     }
-    
-    TreeNode* ret = new TreeNode('\0');
+
     if (minus == -1)
     {
-        ret->value = '-';
+        TreeNode *ret = new TreeNode('-');
+        ret->right = stack.topStack();
+        return ret;
     }
-    ret->right = stack.top();
 
-    return ret;
+    return stack.topStack();
 }
 
-void printInorder(TreeNode* root) {
-    if (root) {
+void printInorder(TreeNode *root)
+{
+    if (root)
+    {
         printInorder(root->left);
         cout << root->value << " ";
         printInorder(root->right);
     }
 }
 
-string infixToPostfix(const string& infixExpression) {
-    stack<char> operators;
-    string postfixExpression;
+char *infixToPostfix(const char *infixExpression)
+{
+    Stack<char> operators;
+    int infixLength = strlen(infixExpression);
+    char *postfixExpression = new char[infixLength + 1];
+    int postfixIndex = 0;
 
-    for (char c : infixExpression) {
-        if (isOperator(c)) {
-            // Если символ - оператор, извлекаем все операторы с более высоким или равным приоритетом из стека
-            // и добавляем их к постфиксной строке, затем добавляем текущий оператор в стек
-            while (!operators.empty() && operators.top() != '(' && (c != '*' && c != '/') && (operators.top() == '+' || operators.top() == '-')) {
-                postfixExpression += operators.top();
-                operators.pop();
+    for (int i = 0; i < infixLength; ++i)
+    {
+        char c = infixExpression[i];
+        if (isOperator(c))
+        {
+            while (!operators.isEmptyStack() && operators.topStack() != '(' && (c != '*' && c != '/') && (operators.topStack() == '+' || operators.topStack() == '-'))
+            {
+                postfixExpression[postfixIndex++] = operators.topStack();
+                operators.popStack();
             }
-            operators.push(c);
-        } else if (c == '(') {
-            operators.push(c); // Если символ - открывающая скобка, добавляем её в стек
-        } else if (c == ')') {
-            // Если символ - закрывающая скобка, извлекаем все операторы из стека до открывающей скобки
-            // и добавляем их к постфиксной строке, затем удаляем открывающую скобку из стека
-            while (!operators.empty() && operators.top() != '(') {
-                postfixExpression += operators.top();
-                operators.pop();
+            operators.pushStack(c);
+        }
+        else if (c == '(')
+        {
+            operators.pushStack(c);
+        }
+        else if (c == ')')
+        {
+            while (!operators.isEmptyStack() && operators.topStack() != '(')
+            {
+                postfixExpression[postfixIndex++] = operators.topStack();
+                operators.popStack();
             }
-            operators.pop(); // Удаляем открывающую скобку из стека
-        } else if (c != ' '){
-            postfixExpression += c; // Если символ - операнд, добавляем его к постфиксной строке
+            operators.popStack();
+        }
+        else if (c != ' ')
+        {
+            postfixExpression[postfixIndex++] = c;
         }
     }
 
-    // Извлекаем оставшиеся операторы из стека и добавляем их к постфиксной строке
-    while (!operators.empty()) {
-        postfixExpression += operators.top();
-        operators.pop();
+    while (!operators.isEmptyStack())
+    {
+        postfixExpression[postfixIndex++] = operators.topStack();
+        operators.popStack();
     }
+
+    postfixExpression[postfixIndex] = '\0';
 
     return postfixExpression;
 }
 
+int main()
+{
+    char *infixExpression = "- ((a * (b)) * (4 * (5)))";
+    char *postfixExpression = infixToPostfix(infixExpression);
+    TreeNode *root = buildExpressionTree(postfixExpression);
 
-int main() {
-    string infixExpression = "- ((a * (b)) * (4 * (-5)))";
-    string postfixExpression = infixToPostfix(infixExpression);
-    TreeNode* root = buildExpressionTree(postfixExpression);
-
-    cout << "Дерево разбора для выражения " << postfixExpression << ":\n";
+    cout << "Инфиксная форма: " << infixExpression << "\n";
+    cout << "Постфиксная форма: " << postfixExpression << "\n";
+    cout << "Дерево: ";
     printInorder(root);
-    cout << "\n\n";
+    cout << "\n";
 
     return 0;
 }
