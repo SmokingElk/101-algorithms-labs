@@ -128,6 +128,16 @@ bool deleteFromList (List list, ListIter deleting) {
     return true;
 }
 
+int lengthList (List list) {
+    int length = 0;
+
+    for (ListIter it = listBegin(list); iterNotEquals(it, listEnd(list)); it = iterNext(it)) {
+        length++;
+    }
+
+    return length;
+}
+
 void printList (List list) {
     for (ListIter it = listBegin(list); iterNotEquals(it, listEnd(list)); it = iterNext(it)) {
         printf("%f ", iterFetch(it));

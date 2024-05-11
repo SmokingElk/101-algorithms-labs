@@ -44,5 +44,6 @@ int listLength (List list);
 bool inList (List list, ListIter finding);
 bool insertToList (List list, ListIter after, ListElem value);
 bool deleteFromList (List list, ListIter deleting);
+int lengthList (List list);
 void printList (List list);
 bool expandListWithCopies (List list, ListIter copying, int lengthRequired);

@@ -8,6 +8,8 @@ int main () {
     insertToList(list, iterPrev(listEnd(list)), 3.0);
     insertToList(list, iterPrev(listEnd(list)), 8.0);
 
+    printf("%d\n", lengthList(list));
+
     for (ListIter it = listBegin(list); iterNotEquals(it, listEnd(list)); it = iterNext(it)) {
         printf("%f ", iterFetch(it));
     }
