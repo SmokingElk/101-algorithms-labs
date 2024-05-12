@@ -56,14 +56,14 @@ public:
     void inorderPrint(TreeNode* node) {
         if (node != nullptr) {
             inorderPrint(node->left);
-            std::cout << node->value << " ";
+            cout << node->value << " ";
             inorderPrint(node->right);
         }
     }
 
     void printTree() {
         inorderPrint(root);
-        std::cout << std::endl;
+        cout << endl;
     }
 
     int getMinLeaf() {

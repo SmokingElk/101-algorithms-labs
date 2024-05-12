@@ -1,9 +1,6 @@
 #include "../include/BinarySearchTree.hpp"
 #include <iostream>
 
-using std::cout;
-using std::endl;
-
 int main() {
     BinarySearchTree tree;
     tree.insert(50);
